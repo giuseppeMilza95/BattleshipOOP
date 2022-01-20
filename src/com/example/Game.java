@@ -52,7 +52,6 @@ public class Game extends ShipDeployment {
 
         }
         return 2;
-
     }
 
 
@@ -107,11 +106,11 @@ public class Game extends ShipDeployment {
             hits.setItem(x, column, " H  ");
             System.out.println("Well done! You hit the boat");
             turn = "computer";
-        } else if (hitResult == 0) {
+        } if (hitResult == 0) {
             hits.setItem(x, column, " W  ");
             System.out.println("Water");
             turn = "computer";
-        }else {
+        }if(hitResult == 2){
             System.out.println("Place already hit, check the hit grid");
             turn = "player";
         }
@@ -119,27 +118,47 @@ public class Game extends ShipDeployment {
 
         if (!Grid.checkWin(this.computerGrid.grid)) {
             System.out.println("Player One Won !!");
+            System.out.println("Hit board");
+            hitGrid.printGrid();
+            System.out.println("Your board");
+            playerGrid.printGrid();
             turn = "quit";
         }
         return turn;
     }
 
 
-    public String computerRound() {
+    public String computerRound(Grid playerG) {
+
             String turn ="computer";
-            int ranRow = ran.nextInt(10);
-            int ranColumn = ran.nextInt(10);
-
-            while (hit(ranRow, ranColumn, playerGrid) == 1 || hit(ranRow, ranColumn, playerGrid) == 0) ;
+            System.out.println("I am here");
 
 
-            turn = "player";
+
+            while (turn == "computer"){
+                int ranRow = ran.nextInt(10);
+                int ranColumn = ran.nextInt(10);
+                int valueHit = hit(ranRow, ranColumn, playerGrid);
+                if (valueHit == 1){
+                    System.out.println("The computer hit you!");
+                    return "player";
+
+                }
+                if (valueHit == 0){
+                    System.out.println("Straight into the water!");
+                    return "player";
 
 
-            if (!Grid.checkWin(playerGrid.grid)) {
-                System.out.println("The computer Won");
-                turn = "quit";
+                } if (valueHit == 2){
+
+                    turn = "computer";
+
+                }
+
+
             }
+
+
 
 
 
@@ -148,15 +167,10 @@ public class Game extends ShipDeployment {
 
 
     public void gameOn(){
-        System.out.println("Welcome to Battleship game ! ");
         String game = "start";
         String turn = "player";
         randomShipPosition(computerGrid);
         randomShipPosition(playerGrid);
-        System.out.println("Hit board");
-        hitGrid.printGrid();
-        System.out.println("Your board");
-        playerGrid.printGrid();
         while(game != "quit"){
             int choice = 0;
             System.out.println("(1 - Quit) - (2 - hit)");
@@ -172,30 +186,36 @@ public class Game extends ShipDeployment {
             }
 
 
-
-
             switch (choice) {
                 case 1:
                     game = "quit";
                     break;
                 case 2:
                     if (turn == "player") {
-
+                        System.out.println("Hit board");
+                        hitGrid.printGrid();
+                        System.out.println("Computer board");
+                        computerGrid.printGrid();
+                        System.out.println("Your board");
+                        playerGrid.printGrid();
                         int column = columnCoordinate();
                         int row = rowCoordinate();
 
                         turn = playerRound(row,column, computerGrid, hitGrid);
                         if (turn == "computer") {
-                            turn = computerRound();
-
+                            int count = 0;
+                            turn = computerRound(playerGrid);
+                            if (!Grid.checkWin(this.playerGrid.grid)) {
+                                System.out.println("The computer Won");
+                                System.out.println("Hit board");
+                                hitGrid.printGrid();
+                                System.out.println("Your board");
+                                playerGrid.printGrid();
+                                game = "quit";
+                            }
                         }
 
                     }
-
-                    System.out.println("Hit board");
-                    hitGrid.printGrid();
-                    System.out.println("Your board");
-                    playerGrid.printGrid();
 
 
 
