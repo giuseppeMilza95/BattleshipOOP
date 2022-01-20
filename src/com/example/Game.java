@@ -125,9 +125,8 @@ public class Game extends ShipDeployment {
     }
 
 
-    public String computerRound(Grid playerG) {
+    public String computerRound() {
             String turn ="computer";
-            System.out.println("I am here");
             int ranRow = ran.nextInt(10);
             int ranColumn = ran.nextInt(10);
 
@@ -149,10 +148,15 @@ public class Game extends ShipDeployment {
 
 
     public void gameOn(){
+        System.out.println("Welcome to Battleship game ! ");
         String game = "start";
         String turn = "player";
         randomShipPosition(computerGrid);
         randomShipPosition(playerGrid);
+        System.out.println("Hit board");
+        hitGrid.printGrid();
+        System.out.println("Your board");
+        playerGrid.printGrid();
         while(game != "quit"){
             int choice = 0;
             System.out.println("(1 - Quit) - (2 - hit)");
@@ -168,28 +172,30 @@ public class Game extends ShipDeployment {
             }
 
 
+
+
             switch (choice) {
                 case 1:
                     game = "quit";
                     break;
                 case 2:
                     if (turn == "player") {
-                        System.out.println("Hit board");
-                        hitGrid.printGrid();
-                        System.out.println("Computer board");
-                        computerGrid.printGrid();
-                        System.out.println("Your board");
-                        playerGrid.printGrid();
+
                         int column = columnCoordinate();
                         int row = rowCoordinate();
 
                         turn = playerRound(row,column, computerGrid, hitGrid);
                         if (turn == "computer") {
-                            turn = computerRound(playerGrid);
+                            turn = computerRound();
 
                         }
 
                     }
+
+                    System.out.println("Hit board");
+                    hitGrid.printGrid();
+                    System.out.println("Your board");
+                    playerGrid.printGrid();
 
 
 
