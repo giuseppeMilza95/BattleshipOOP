@@ -221,7 +221,6 @@ public class Game extends ShipDeployment {
                     break;
                 case 2:
                     if (turn == "player") {
-                        computerGrid.printGrid();
                         printBoard();
                         int column = columnCoordinate();
                         int row = rowCoordinate();
