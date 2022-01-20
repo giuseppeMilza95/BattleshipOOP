@@ -3,8 +3,20 @@ package com.example;
 import java.util.Random;
 
 public class ShipDeployment {
+    /**In this Class I have created two method, the first one to place the ship in the grid
+     * The second Method to place randomly 1 battleship and 2 Destroyers
+     * **/
 
 
+
+    /** shipDeployment takes 4 parameters row number, column number, the grid where it has to be deployed and a boolean
+     * value which indicates if the ship has to be place vertically or horizontally and the ship type.
+     * In the first part we check if the ship is a battleship or destroyers ship, according their type,
+     * I assign a value of the place that they have to cover(4/5 squares).
+     * between line 26 and 80 I am checking firstly if the battleship has to be placed vertically or horizontally.
+     * after that, I am checking if coordinate row and column are empty, and if so, I check if the next places are null, according to the dimension of the ship.
+     * Everything is between try and catch, if everything goes well, the method returns a true else false, this will help me for the method randomShipPosition
+     * **/
     public  boolean shipDeployment(int row, int column, Grid grid, boolean isVertical, String shipType) {
             int places = 0;
             if (shipType.toUpperCase().equals("D")){
@@ -73,6 +85,12 @@ public class ShipDeployment {
 
         return false;
     }
+
+    /**This method, tkaes as parameter the grid where th ship has to be places,
+     * After, I am placing 1 battleship and 2 destroyers.
+     * If the shipDeployment return true, the count Battleship is decreased.
+     * This method does not return nothing.
+     * **/
 
     public  void randomShipPosition(Grid grid){
         Random ran = new Random();

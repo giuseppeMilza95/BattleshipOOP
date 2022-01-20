@@ -6,6 +6,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Game extends ShipDeployment {
+
+    /**I have created a Map to help me out to the translation of the input from the player
+     * Each letter corresponds to one integer need for the coordinate of the grid.
+     * **/
     Map<String, Integer> translation;
     private Scanner scanner = new Scanner(System.in);
     private Grid playerGrid;
@@ -33,6 +37,13 @@ public class Game extends ShipDeployment {
 
     }
 
+
+    /**This method helps to understand if the places hit are empty or if they were hit.
+     * if the grid coordinate contain a part of the ship, it will return 1 as success number;
+     * if the grid coordinate is empty, it will return 2 as water.
+     * if they coordinate were already hit, it will return 2.
+     * This method will help me out with the computerRound and playerRound.
+     * **/
     public int hit(int x, int y, Grid grid) {
         if (grid.getItem(x, y) ==" D  "  || grid.getItem(x, y) == " B  " && grid.getItem(x, y) != " H  " && grid.getItem(x, y) != " W  ") {
             grid.setItem(x, y, " H  ");
@@ -42,10 +53,10 @@ public class Game extends ShipDeployment {
             return 0;
 
         } else if (grid.getItem(x, y) == " W  ") {
-            //System.out.println("Place already try again");
+
             return 2;
         } else if (grid.getItem(x, y) == " H  ") {
-            //System.out.println("Place already hit, try again");
+
             return 2;
         } else {
             System.out.println("Out of the grid");
@@ -54,7 +65,9 @@ public class Game extends ShipDeployment {
         return 2;
     }
 
-
+/**Simple method which ask the user out the row Coordinate,
+ * if the coordinates are wrong it will throw an error handled with try and catch
+ * **/
     public int rowCoordinate() {
         int x = 0;
         while (true) {
@@ -63,7 +76,7 @@ public class Game extends ShipDeployment {
                 System.out.println("Enter coordinate row: ");
 
                 x = scanner.nextInt();
-                if (x <= 9) {
+                if (x <= 9 && x >=0  ) {
                     break;
                 } else {
                     throw new Exception();
@@ -79,14 +92,18 @@ public class Game extends ShipDeployment {
 
     }
 
-
+    /**Simple method which ask the user out the column Coordinate,
+     * if the coordinates are wrong it will throw an error handled with try and catch
+     * **/
     public int columnCoordinate() {
         int column = 0;
         String y = "";
         while (true) {
             try {
                 System.out.println("Enter coordinate column: ");
+
                 y = scanner.next();
+
                 column = translation.get(y.toUpperCase());
                 break;
             } catch (Exception e) {
@@ -97,41 +114,44 @@ public class Game extends ShipDeployment {
 
         return column;
     }
-
+/**In this method we use the method hit to help
+ * we store the output of the method hit into a variable of type int
+ * According to the value of hitResult, it will set the grid coordinate with a particular symbol
+ * and set the turn to the player/computer according to the result.
+ * In the same method, the grid is checked to verify if the user won.
+ * **/
 
     public String playerRound(int x, int column, Grid computerGrid, Grid hits) {
         String turn = "player";
         int hitResult = hit(x, column, computerGrid);
         if (hitResult == 1) {
             hits.setItem(x, column, " H  ");
-            System.out.println("Well done! You hit the boat");
+            System.out.println("Well done! You hit the ship");
             turn = "computer";
         } if (hitResult == 0) {
             hits.setItem(x, column, " W  ");
-            System.out.println("Water");
+            System.out.println("You hit the Water");
             turn = "computer";
         }if(hitResult == 2){
-            System.out.println("Place already hit, check the hit grid");
+            System.out.println("Place already hit, check the Hit board");
             turn = "player";
         }
 
 
         if (!Grid.checkWin(this.computerGrid.grid)) {
             System.out.println("Player One Won !!");
-            System.out.println("Hit board");
-            hitGrid.printGrid();
-            System.out.println("Your board");
-            playerGrid.printGrid();
+            printBoard();
             turn = "quit";
         }
         return turn;
     }
-
+    /**Really similar to the playerRound, here the coordinates are random,
+     * **/
 
     public String computerRound(Grid playerG) {
 
             String turn ="computer";
-            System.out.println("I am here");
+            System.out.println("Computer round:");
 
 
 
@@ -140,12 +160,12 @@ public class Game extends ShipDeployment {
                 int ranColumn = ran.nextInt(10);
                 int valueHit = hit(ranRow, ranColumn, playerGrid);
                 if (valueHit == 1){
-                    System.out.println("The computer hit you!");
+                    System.out.println("The computer hit your battleship!");
                     return "player";
 
                 }
                 if (valueHit == 0){
-                    System.out.println("Straight into the water!");
+                    System.out.println("The computer hit the water!");
                     return "player";
 
 
@@ -164,16 +184,25 @@ public class Game extends ShipDeployment {
 
         return turn;
     }
-
+    /**The first part of the method i print some text and randomly place the ships.
+     * After the user has input a choice, one to exit the game and two to hit.
+     *If the player decide to hit, the above method are called to build the logic of the game.
+     * **/
 
     public void gameOn(){
-        String game = "start";
+        System.out.println("Welcome to Giuseppe battleship!!");
+        System.out.println("Below some help: ");
+        System.out.println("H - hit");
+        System.out.println("W - water");
+        System.out.println("D - Destroyers");
+        System.out.println("B - Battleship");
+        System.out.println("null - empty coordinates");
         String turn = "player";
         randomShipPosition(computerGrid);
         randomShipPosition(playerGrid);
-        while(game != "quit"){
+        while(turn != "quit"){
             int choice = 0;
-            System.out.println("(1 - Quit) - (2 - hit)");
+            System.out.println("Choose: (1 - Quit) - (2 - hit)");
             while(true) {
                 try {
                     System.out.println("Enter your choice");
@@ -188,16 +217,12 @@ public class Game extends ShipDeployment {
 
             switch (choice) {
                 case 1:
-                    game = "quit";
+                    turn = "quit";
                     break;
                 case 2:
                     if (turn == "player") {
-                        System.out.println("Hit board");
-                        hitGrid.printGrid();
-                        System.out.println("Computer board");
                         computerGrid.printGrid();
-                        System.out.println("Your board");
-                        playerGrid.printGrid();
+                        printBoard();
                         int column = columnCoordinate();
                         int row = rowCoordinate();
 
@@ -208,10 +233,8 @@ public class Game extends ShipDeployment {
                             if (!Grid.checkWin(this.playerGrid.grid)) {
                                 System.out.println("The computer Won");
                                 System.out.println("Hit board");
-                                hitGrid.printGrid();
-                                System.out.println("Your board");
-                                playerGrid.printGrid();
-                                game = "quit";
+                                printBoard();
+                                turn = "quit";
                             }
                         }
 
@@ -227,6 +250,17 @@ public class Game extends ShipDeployment {
 
     }
 }
+
+    public void printBoard(){
+        System.out.println("-----------------------Hit board---------------------");
+        hitGrid.printGrid();
+        System.out.println("----------------------Your board---------------------");
+        playerGrid.printGrid();
+
+
+    }
+
+
 }
 
 
