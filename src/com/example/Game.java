@@ -153,7 +153,7 @@ public class Game extends ShipDeployment {
         String turn = "player";
         randomShipPosition(computerGrid);
         randomShipPosition(playerGrid);
-        while(turn != "quit"){
+        while(game != "quit"){
             int choice = 0;
             System.out.println("(1 - Quit) - (2 - hit)");
             while(true) {
